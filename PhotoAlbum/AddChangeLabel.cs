@@ -13,7 +13,7 @@ using PhotoManager;
 
 namespace PhotoAlbum
 {
-    [Activity(Label = "PhotoAlbum", MainLauncher = false, Icon = "@drawable/icon", Theme ="@android:style/Theme.Material.Light.Dialog")]
+    [Activity(Label = "Add Label...", MainLauncher = false, Icon = "@drawable/icon", Theme ="@android:style/Theme.Material.Light.Dialog")]
     public class AddChangeLabel : Activity
     {
         EditText ETLabelName;
@@ -41,6 +41,7 @@ namespace PhotoAlbum
             BOK.Click += delegate
             {
                 pm.AddLabel(ETLabelName.Text);
+                this.Finish();
             };
         }
     }

@@ -78,15 +78,19 @@ namespace PhotoManager
         {
             using (var db = new SQLiteConnection(this.platform, this.path))
             {
+                var defaultLabel = from r in db.Table<Label>()
+                                   where r.LabelName == "Unsigned"
+                                   select r.Id;
 
                 var photoQuery = from p in db.Table<Photo>()
                                  where p.LabelId == labelId
-                                 select new Photo { Id = p.Id, LabelId = 0, Path = p.Path };
+                                 select new Photo { Id = p.Id, LabelId = defaultLabel.Single(), Path = p.Path };
 
                 foreach (var items in photoQuery)
                 {
-                    db.Update(items);
+                    db.InsertOrReplace(items, typeof(Photo));
                 }
+                db.Delete<Label>(labelId);
             }
         }
 
@@ -112,21 +116,14 @@ namespace PhotoManager
             }
         }
 
-        public void ChangePhotoLabel(int photoId, string labelName)
+        public void ChangePhotoLabel(int photoId, int labelId)
         {
             using (var db = new SQLiteConnection(this.platform, this.path))
             {
-                var labelQuery = from l in db.Table<Label>()
-                                 where l.LabelName == labelName
-                                 select l.Id;
-
-                var photo = from p in db.Table<Photo>()
-                            where p.Id == photoId
-                            select p;
-
-                if (labelQuery.Count<int>() == 0)
-                    db.Insert(new Label { LabelName = labelName });
-                db.Update(new Photo { Id = photo.Single<Photo>().Id, LabelId = db.Table<Label>().Last<Label>().Id, Path = photo.Single<Photo>().Path });
+                var query = from r in db.Table<Photo>()
+                            where r.Id == photoId
+                            select r;
+                db.Update(new Photo { Id = photoId, LabelId = labelId, Path = query.Single<Photo>().Path });
             }
         }
 

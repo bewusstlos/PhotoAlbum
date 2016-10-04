@@ -55,7 +55,7 @@ namespace PhotoAlbum
                         {
                             case "Add Label":
                                 Intent i = new Intent(this, typeof(AddChangeLabel));
-                                StartActivity(i);
+                                StartActivityForResult(i, 1);
                                 break;
                         }
                     };
@@ -111,9 +111,10 @@ namespace PhotoAlbum
                 LEachLabelHeader.Orientation = Orientation.Horizontal;
                 LEachLabelHeader.Id = l.Id;
                 LEachLabelHeader.Elevation = 20;
-                
 
                 TextView TVLabelHeader = new TextView(this);
+                TVLabelHeader.TextSize = 18;
+                TVLabelHeader.SetTextColor(Color.Black);
                 LinearLayout.LayoutParams lpForTVLabelHeader = new LinearLayout.LayoutParams(-2, -2);
                 lpForTVLabelHeader.SetMargins(10, 10, 10, 10);
                 TVLabelHeader.Text = l.LabelName;
@@ -147,9 +148,10 @@ namespace PhotoAlbum
 
                 foreach (var image in PhotosForEachLabels)
                 {
+                    int sw = Resources.DisplayMetrics.WidthPixels;
                     ImageView img = new ImageView(this);
-                    img.SetImageBitmap(BitmapHelpers.LoadAndResizeBitmap(image.Path, Resources.DisplayMetrics.WidthPixels / 2 - 15, Resources.DisplayMetrics.WidthPixels / 2 - 15));
-                    LinearLayout.LayoutParams lpForImg = new LinearLayout.LayoutParams(Resources.DisplayMetrics.WidthPixels / 2 - 15, Resources.DisplayMetrics.WidthPixels / 2 - 15);
+                    img.SetImageBitmap(BitmapHelpers.LoadAndResizeBitmap(image.Path, sw / 2 - 15, sw / 2 - 15));
+                    LinearLayout.LayoutParams lpForImg = new LinearLayout.LayoutParams(sw / 2 - 15, sw / 2 - 15);
                     img.SetScaleType(ImageView.ScaleType.CenterCrop);
                     img.SetPadding(10, 10, 10, 0);
                     img.Id = image.Id;
@@ -162,7 +164,9 @@ namespace PhotoAlbum
                             switch (arg1.Item.TitleFormatted.ToString())
                             {
                                 case "Change Label":
-                                    
+                                    Intent i = new Intent(this, typeof(ChangeLabelDialog));
+                                    i.PutExtra("PhotoId", img.Id);
+                                    StartActivityForResult(i, 2);
                                     break;
                                 case "Delete":
                                     pm.DeletePhoto(img.Id);
@@ -269,6 +273,11 @@ namespace PhotoAlbum
             }
             
             else if(requestCode == 1)
+            {
+
+            }
+
+            else if(requestCode == 2)
             {
 
             }
