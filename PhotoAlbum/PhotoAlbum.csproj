@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitmapHelpers.cs" />
+    <Compile Include="ChangeLabelDialog.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="AddChangeLabel.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -71,6 +72,9 @@
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <AndroidResource Include="Resources\layout\add_change_label.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\select_label.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
@@ -86,7 +90,9 @@
     <AndroidResource Include="Resources\drawable\Icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\AndroidManifest.xml" />
+    <None Include="Properties\AndroidManifest.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PhotoManager\PhotoManager.csproj">
@@ -113,6 +119,15 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\photo_context_menu.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\ic_view_headline_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\ic_camera_enhance_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\label_context_menu.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -108,6 +108,8 @@ namespace PhotoAlbum
                 LinearLayout LEachLabelHeader = new LinearLayout(this);
                 LinearLayout.LayoutParams lpForLEachLabelHeader = new LinearLayout.LayoutParams(-1, -2);
                 LEachLabelHeader.SetBackgroundColor(Color.White);
+                LEachLabelHeader.Orientation = Orientation.Horizontal;
+                LEachLabelHeader.Id = l.Id;
                 LEachLabelHeader.Elevation = 20;
                 
 
@@ -115,6 +117,15 @@ namespace PhotoAlbum
                 LinearLayout.LayoutParams lpForTVLabelHeader = new LinearLayout.LayoutParams(-2, -2);
                 lpForTVLabelHeader.SetMargins(10, 10, 10, 10);
                 TVLabelHeader.Text = l.LabelName;
+
+                EditText ETLabelChange = new EditText(this);
+                LinearLayout.LayoutParams lpForETLabelChange = new LinearLayout.LayoutParams(-2, -2, 4f);
+                ETLabelChange.Visibility = ViewStates.Gone;
+
+                Button BConfirmChange = new Button(this);
+                LinearLayout.LayoutParams lpForBConfirmChange = new LinearLayout.LayoutParams(-2, -2, 1f);
+                BConfirmChange.Text = "OK";
+                BConfirmChange.Visibility = ViewStates.Gone;
 
                 GridLayout LPhotosTable = new GridLayout(this);
                 LPhotosTable.Orientation = GridOrientation.Horizontal;
@@ -166,7 +177,39 @@ namespace PhotoAlbum
                 }
 
                 LEachLabelHeader.AddView(TVLabelHeader, lpForTVLabelHeader);
+                LEachLabelHeader.AddView(ETLabelChange, lpForETLabelChange);
+                LEachLabelHeader.AddView(BConfirmChange,lpForBConfirmChange);
                 LEachLabel.AddView(LEachLabelHeader, lpForLEachLabelHeader);
+                LEachLabelHeader.LongClick += delegate
+                {
+                    if (LEachLabelHeader.Id != 0)
+                    {
+                        PopupMenu menu = new PopupMenu(this, LEachLabelHeader);
+                        menu.Inflate(Resource.Layout.label_context_menu);
+                        menu.MenuItemClick += (s, arg) =>
+                        {
+                            switch (arg.Item.TitleFormatted.ToString())
+                            {
+                                case "Rename Label":
+                                    TVLabelHeader.Visibility = ViewStates.Gone;
+                                    ETLabelChange.Visibility = ViewStates.Visible;
+                                    BConfirmChange.Visibility = ViewStates.Visible;
+                                    break;
+                                case "Delete":
+                                    pm.DeleteLabelWithout(LEachLabelHeader.Id);
+                                    RefreshLayout(ref LLRootLayout, pm);
+                                    break;
+                            }
+                        };
+                        menu.Show();
+                    }
+                };
+
+                BConfirmChange.Click += delegate
+                {
+                    pm.ChangeLabel(LEachLabelHeader.Id, ETLabelChange.Text);
+                    RefreshLayout(ref LLRootLayout, pm);
+                };
                 LEachLabel.AddView(LPhotosTable, lpForLPhotosTable);
                 RootLayout.AddView(LEachLabel, lpForLEachLabel);
 

@@ -36,6 +36,17 @@ namespace PhotoManager
             }
         }
 
+        public void ChangeLabel(int id, string newLabelName)
+        {
+            using (var db = new SQLiteConnection(this.platform, this.path))
+            {
+                var query = from r in db.Table<Label>()
+                            where r.Id == id
+                            select r;
+                db.Update(new Label { Id = query.Single().Id, LabelName = newLabelName });
+            }
+        }
+
         public List<Photo> GetPhotosOfLabelToList(Label l)
         {
             using (var db = new SQLiteConnection(this.platform, this.path))
@@ -63,16 +74,13 @@ namespace PhotoManager
             }
         }
 
-        public void DeleteLabelWithout(string labelName)
+        public void DeleteLabelWithout(int labelId)
         {
             using (var db = new SQLiteConnection(this.platform, this.path))
             {
-                var query = from r in db.Table<Label>()
-                            where r.LabelName == labelName
-                            select r.Id;
 
                 var photoQuery = from p in db.Table<Photo>()
-                                 where p.LabelId == query.Single<int>()
+                                 where p.LabelId == labelId
                                  select new Photo { Id = p.Id, LabelId = 0, Path = p.Path };
 
                 foreach (var items in photoQuery)
