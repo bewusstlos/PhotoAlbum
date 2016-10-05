@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Samples", "Samples\Samples.shproj", "{3E90138F-182A-4669-81C7-F7C66373E937}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.Droid", "Samples.Droid\Samples.Droid.csproj", "{3C90F5F0-BCAE-4BB9-8FD9-17ECD6089239}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Samples\Samples.projitems*{3c90f5f0-bcae-4bb9-8fd9-17ecd6089239}*SharedItemsImports = 4
+		Samples\Samples.projitems*{3e90138f-182a-4669-81c7-f7c66373e937}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C90F5F0-BCAE-4BB9-8FD9-17ECD6089239}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C90F5F0-BCAE-4BB9-8FD9-17ECD6089239}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C90F5F0-BCAE-4BB9-8FD9-17ECD6089239}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{3C90F5F0-BCAE-4BB9-8FD9-17ECD6089239}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C90F5F0-BCAE-4BB9-8FD9-17ECD6089239}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C90F5F0-BCAE-4BB9-8FD9-17ECD6089239}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{1330FF73-7B76-4889-B2D7-9B82EA183130}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1330FF73-7B76-4889-B2D7-9B82EA183130}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1330FF73-7B76-4889-B2D7-9B82EA183130}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1330FF73-7B76-4889-B2D7-9B82EA183130}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF2B54C1-077D-4850-9729-E7FC62F0CD7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF2B54C1-077D-4850-9729-E7FC62F0CD7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF2B54C1-077D-4850-9729-E7FC62F0CD7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF2B54C1-077D-4850-9729-E7FC62F0CD7D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

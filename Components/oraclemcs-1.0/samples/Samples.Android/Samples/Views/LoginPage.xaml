@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Samples.Views.LoginPage">
+    <ContentPage.Resources>
+ 
+    </ContentPage.Resources>
+    <ScrollView>
+	<StackLayout Orientation="Vertical" VerticalOptions= "CenterAndExpand" Spacing="10">
+		<Label Text="Login" 
+			VerticalOptions="Start"
+			HorizontalOptions="Center"
+			FontSize="Large"
+			FontAttributes= "Bold">
+		</Label>
+		<Entry Text="{Binding UserName}" 
+			Placeholder= "User Name"
+			HorizontalOptions="Center" 
+			WidthRequest="250">
+		</Entry>
+		<Entry Text="{Binding Password}" 
+			IsPassword="true" 
+			Placeholder= "Password" 
+			HorizontalOptions="Center" 
+			WidthRequest="250">
+		</Entry>
+		<Button Text="Login" 
+			Clicked="Login"
+			HorizontalOptions="Center" 
+			WidthRequest="250">
+		</Button>
+    	<Label Text="{Binding OutputMessage}"></Label>
+	</StackLayout>
+	</ScrollView>
+</ContentPage>

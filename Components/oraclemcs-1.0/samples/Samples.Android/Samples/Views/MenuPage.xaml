@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Samples.Views.MenuPage">
+    <TableView>
+        <TableView.Root>
+            <TableSection>
+                <TextCell Text="Storage" Tapped="NavigateToStorage"></TextCell>
+                <TextCell Text="Notifications" Tapped="NavigateToNotifications"></TextCell>
+                <TextCell Text="User Details" Tapped="NavigateToUserDetails"></TextCell>
+                <TextCell Text="Custom Api" Tapped="NavigateToCustomApis"></TextCell>
+                <TextCell Text="Analytics" Tapped="NavigateAnalytics"></TextCell>
+                <TextCell></TextCell>
+                <TextCell Text="Logout" Tapped="Logout"></TextCell>
+            </TableSection>
+        </TableView.Root>
+    </TableView>
+</ContentPage>

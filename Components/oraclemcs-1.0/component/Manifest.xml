@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<component format="1" id="oraclemcs">
+  <name>Oracle Mobile Cloud Service SDK</name>
+  <publisher>Xamarin Inc</publisher>
+  <publisher-url>http://www.xamarin.com/oracle</publisher-url>
+  <version>1.0</version>
+  <summary>Connect to Oracle MCS for data storage, user authentication, push notifications, and more.</summary>
+  <samples>
+    <sample id="Samples.Android">
+      <name>Android</name>
+      <summary>Android</summary>
+    </sample>
+    <sample id="Samples.iOS">
+      <name>iOS Sample</name>
+      <summary>iOS Sample</summary>
+    </sample>
+  </samples>
+</component>

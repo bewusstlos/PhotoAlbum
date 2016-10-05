@@ -8,4 +8,4 @@
     <item name="android:colorControlActivated">#ff546e7a</item>
     <item name="android:colorButtonNormal">#ff263238</item>
   <item name="android:colorBackground">@color/theme_material_pink_background</item><item name="android:windowBackground">?android:attr/colorBackground</item><item name="android:textColorPrimary">#fffafafa</item><item name="android:textColorSecondary">#ff9e9e9e</item></style>
-</resources>
+<style name="Theme.Custom" parent="@android:style/Theme.Material.Light"><item name="android:colorPrimary">#fffafafa</item></style></resources>

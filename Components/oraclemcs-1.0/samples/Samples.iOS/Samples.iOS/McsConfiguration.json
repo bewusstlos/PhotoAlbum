@@ -1,0 +1,17 @@
+﻿{
+    "mobileBackends": {
+        "WinBackend": {
+            "default": true,
+            "baseUri": "http://baseUri.com",
+            "applicationKey": "applicationKeyTest",
+            "authorization": {
+                "basicAuth": {
+                    "backendId": "backendIdTest",
+                    "anonymousToken": "anonymousTokenTest"
+                }
+            }
+        }
+    },
+    "logLevel": "Verbose"
+}
+ 
