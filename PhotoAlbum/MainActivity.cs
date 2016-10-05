@@ -8,6 +8,7 @@ using Android.OS;
 using Android.Provider;
 using Android.Widget;
 using Java.IO;
+using Android.Views.Animations;
 
 using PhotoManager;
 using Environment = Android.OS.Environment;
@@ -98,12 +99,15 @@ namespace PhotoAlbum
 
             foreach(Label l in AllLabels)
             {
+                int sw = (int)((float)Resources.DisplayMetrics.WidthPixels / 2.42f);
+
                 PhotosForEachLabels = pm.GetPhotosOfLabelToList(l);
 
                 LinearLayout LEachLabel = new LinearLayout(this);
                 LinearLayout.LayoutParams lpForLEachLabel = new LinearLayout.LayoutParams(-1, -2);
                 LEachLabel.Orientation = Orientation.Vertical;
-                lpForLEachLabel.SetMargins(10, 10, 10, 0);
+                LEachLabel.Elevation = 10;
+                lpForLEachLabel.SetMargins(20, 10, 20, 10);
 
                 LinearLayout LEachLabelHeader = new LinearLayout(this);
                 LinearLayout.LayoutParams lpForLEachLabelHeader = new LinearLayout.LayoutParams(-1, -2);
@@ -115,7 +119,8 @@ namespace PhotoAlbum
                 TextView TVLabelHeader = new TextView(this);
                 TVLabelHeader.TextSize = 18;
                 TVLabelHeader.SetTextColor(Color.Black);
-                LinearLayout.LayoutParams lpForTVLabelHeader = new LinearLayout.LayoutParams(-2, -2);
+                LinearLayout.LayoutParams lpForTVLabelHeader = new LinearLayout.LayoutParams(-1, -2);
+                TVLabelHeader.TextAlignment = TextAlignment.Center;
                 lpForTVLabelHeader.SetMargins(10, 10, 10, 10);
                 TVLabelHeader.Text = l.LabelName;
 
@@ -134,27 +139,44 @@ namespace PhotoAlbum
                 lpForLPhotosTable.SetMargins(5, 0, 5, 0);
                 LPhotosTable.Elevation = 10;
                 LPhotosTable.ColumnCount = 2;
-                LPhotosTable.RowCount = PhotosForEachLabels.Count / 2 + 1;
+                LPhotosTable.RowCount = PhotosForEachLabels.Count/2 + 1;
                 LPhotosTable.SetBackgroundColor(Color.White);
 
                 LEachLabelHeader.Click += delegate
                 {
+
                     if (LPhotosTable.Visibility == Android.Views.ViewStates.Visible)
+                    {
+                        
+                        HideShowAnimation(ref LPhotosTable, LPhotosTable.RowCount, sw, false);
                         LPhotosTable.Visibility = Android.Views.ViewStates.Gone;
+                    }
                     else
-                        LPhotosTable.Visibility = Android.Views.ViewStates.Visible;  
+                    {   
+                        LPhotosTable.Visibility = Android.Views.ViewStates.Visible;
+                        HideShowAnimation(ref LPhotosTable, LPhotosTable.RowCount, sw, true);
+                    } 
                 };
 
 
                 foreach (var image in PhotosForEachLabels)
                 {
-                    int sw = Resources.DisplayMetrics.WidthPixels;
+                    FrameLayout flForImg = new FrameLayout(this);
                     ImageView img = new ImageView(this);
-                    img.SetImageBitmap(BitmapHelpers.LoadAndResizeBitmap(image.Path, sw / 2 - 15, sw / 2 - 15));
-                    LinearLayout.LayoutParams lpForImg = new LinearLayout.LayoutParams(sw / 2 - 15, sw / 2 - 15);
+                    img.SetImageBitmap(BitmapHelpers.LoadAndResizeBitmap(image.Path, sw, sw));
+                    LinearLayout.LayoutParams lpForImg = new LinearLayout.LayoutParams(sw, sw);
                     img.SetScaleType(ImageView.ScaleType.CenterCrop);
-                    img.SetPadding(10, 10, 10, 0);
+                    img.Elevation = 5;
+                    flForImg.SetPadding(sw / 19, sw / 19, sw / 19, sw / 19);
                     img.Id = image.Id;
+
+                    img.Click +=(s,arg)=>
+                    {
+                        Intent i = new Intent(this, typeof(FullscreenPhotoView));
+                        Intent.PutExtra("PhotoId", image.Id);
+                        StartActivity(i);
+                    };
+
                     img.LongClick += delegate
                     {
                         PopupMenu menu = new PopupMenu(this, img, GravityFlags.Top);
@@ -176,8 +198,8 @@ namespace PhotoAlbum
                         };
                         menu.Show();
                     };
-                    LPhotosTable.AddView(img, lpForImg);
-                    //-------------
+                    flForImg.AddView(img, lpForImg);
+                    LPhotosTable.AddView(flForImg);
                 }
 
                 LEachLabelHeader.AddView(TVLabelHeader, lpForTVLabelHeader);
@@ -195,9 +217,13 @@ namespace PhotoAlbum
                             switch (arg.Item.TitleFormatted.ToString())
                             {
                                 case "Rename Label":
-                                    TVLabelHeader.Visibility = ViewStates.Gone;
-                                    ETLabelChange.Visibility = ViewStates.Visible;
-                                    BConfirmChange.Visibility = ViewStates.Visible;
+                                    if(TVLabelHeader.Text != "Unsigned")
+                                    {
+                                        TVLabelHeader.Visibility = ViewStates.Gone;
+                                        ETLabelChange.Visibility = ViewStates.Visible;
+                                        BConfirmChange.Visibility = ViewStates.Visible;
+                                    }
+                                    
                                     break;
                                 case "Delete":
                                     pm.DeleteLabelWithout(LEachLabelHeader.Id);
@@ -218,6 +244,17 @@ namespace PhotoAlbum
                 RootLayout.AddView(LEachLabel, lpForLEachLabel);
 
             }
+        }
+
+        public void HideShowAnimation(ref GridLayout g, int imageCount, int DisplayMetrics, bool isShow)
+        {
+            Animation anim = new TranslateAnimation(0, 0, -((DisplayMetrics + (DisplayMetrics / 19)) * imageCount), 0);
+            Animation backAnim = new TranslateAnimation(0, 0, 0, (DisplayMetrics + (DisplayMetrics / 19)) * imageCount);
+            anim.Duration = 500;
+            if (isShow)
+                g.StartAnimation(anim);
+            else
+                g.StartAnimation(backAnim);
         }
 
         private void CreateDirectoryForPictures()

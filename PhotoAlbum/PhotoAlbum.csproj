@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="BitmapHelpers.cs" />
     <Compile Include="ChangeLabelDialog.cs" />
+    <Compile Include="FullscreenPhotoView.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="AddChangeLabel.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -75,6 +76,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\select_label.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\fullscreen_photo_view.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

@@ -28,6 +28,17 @@ namespace PhotoManager
             }
         }
 
+        public string GetPhotoPath(int id)
+        {
+            using (var db = new SQLiteConnection(this.platform, this.path))
+            {
+                var query = from r in db.Table<Photo>()
+                            where r.Id == id
+                            select r.Path;
+                return query.Single();
+            }
+        }
+
         public List<Photo> GetPhotosToList()
         {
             using (var db = new SQLiteConnection(this.platform, this.path))
