@@ -14,6 +14,7 @@ using PhotoManager;
 using Environment = Android.OS.Environment;
 using Uri = Android.Net.Uri;
 using Android.Views;
+using RedisSharp;
 
 namespace PhotoAlbum
 {
@@ -91,6 +92,10 @@ namespace PhotoAlbum
             }
             SetContentView(Resource.Layout.Main);
 
+            //string host = "192.168.1.1";
+            //Redis r = new Redis(host);
+            //r.Set()
+
             CreateDirectoryForPictures();
             LLRootLayout = FindViewById<LinearLayout>(Resource.Id.RootLayout);
             LLContextMenuOwner = FindViewById<LinearLayout>(Resource.Id.context_menu_popuper);
@@ -106,7 +111,7 @@ namespace PhotoAlbum
                 SetLayoutDefaultStyle(ref RootLayout, pm);
             else
                 SetLayoutSpoilerStyle(ref RootLayout, pm);
-            
+
         }
 
         public void SetLayoutDefaultStyle(ref LinearLayout RootLayout, PhotosManager pm)
@@ -120,7 +125,7 @@ namespace PhotoAlbum
             GLLabelTable.RowCount = AllLabels.Count / 2;
             GLLabelTable.ColumnCount = 2;
 
-            foreach(Label l in AllLabels)
+            foreach (Label l in AllLabels)
             {
                 PhotosForEachLabels = pm.GetPhotosOfLabelToList(l);
 
@@ -135,7 +140,7 @@ namespace PhotoAlbum
                 GLCollageContainer.ColumnCount = 3;
                 LinearLayout.LayoutParams lpForGLCollageContainer = new LinearLayout.LayoutParams(sw, sw);
 
-                for(int i = 0; i < 10; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     try
                     {
@@ -165,33 +170,37 @@ namespace PhotoAlbum
 
         public void SetLayoutSpoilerStyle(ref LinearLayout RootLayout, PhotosManager pm)
         {
+
             List<Label> AllLabels = pm.GetLabelsToList();
             List<Photo> PhotosForEachLabels;
 
             foreach (Label l in AllLabels)
             {
-                
+
 
                 PhotosForEachLabels = pm.GetPhotosOfLabelToList(l);
 
                 LinearLayout LEachLabel = new LinearLayout(this);
                 LinearLayout.LayoutParams lpForLEachLabel = new LinearLayout.LayoutParams(-1, -2);
                 LEachLabel.Orientation = Orientation.Vertical;
-                //LEachLabel.Elevation = 10;
+                LEachLabel.Elevation = 10;
                 lpForLEachLabel.SetMargins(20, 10, 20, 10);
 
                 LinearLayout LEachLabelHeader = new LinearLayout(this);
                 LinearLayout.LayoutParams lpForLEachLabelHeader = new LinearLayout.LayoutParams(-1, -2);
-                LEachLabelHeader.SetBackgroundColor(Color.ParseColor("#fffefefe"));
+                LEachLabelHeader.SetBackgroundColor(Color.ParseColor("#fff5f5f5"));
                 LEachLabelHeader.Orientation = Orientation.Horizontal;
-                LEachLabelHeader.Id = l.Id;
-                //LEachLabelHeader.Elevation = 20;
+
+                LEachLabelHeader.Elevation = 20;
 
                 TextView TVLabelHeader = new TextView(this);
                 TVLabelHeader.TextSize = 18;
                 TVLabelHeader.SetTextColor(Color.Black);
                 LinearLayout.LayoutParams lpForTVLabelHeader = new LinearLayout.LayoutParams(-1, -2);
                 TVLabelHeader.TextAlignment = TextAlignment.Center;
+                TVLabelHeader.Id = l.Id;
+                TVLabelHeader.Drag += HandleDrag;
+                TVLabelHeader.Tag = l.LabelName;
                 lpForTVLabelHeader.SetMargins(10, 10, 10, 10);
                 TVLabelHeader.Text = l.LabelName;
 
@@ -208,10 +217,11 @@ namespace PhotoAlbum
                 LPhotosTable.Orientation = GridOrientation.Horizontal;
                 LinearLayout.LayoutParams lpForLPhotosTable = new LinearLayout.LayoutParams(-1, -2);
                 lpForLPhotosTable.SetMargins(5, 0, 5, 0);
-                //LPhotosTable.Elevation = 10;
+                LPhotosTable.Elevation = 10;
+                LPhotosTable.Id = l.Id;
                 LPhotosTable.ColumnCount = 2;
                 LPhotosTable.RowCount = PhotosForEachLabels.Count / 2 + 1;
-                LPhotosTable.SetBackgroundColor(Color.ParseColor("#fffefefe"));
+                LPhotosTable.SetBackgroundColor(Color.ParseColor("#fff5f5f5"));
 
                 LEachLabelHeader.Click += delegate
                 {
@@ -250,24 +260,8 @@ namespace PhotoAlbum
 
                     img.LongClick += delegate
                     {
-                        PopupMenu menu = new PopupMenu(this, img, GravityFlags.Top);
-                        menu.Inflate(Resource.Layout.photo_context_menu);
-                        menu.MenuItemClick += (s1, arg1) =>
-                        {
-                            switch (arg1.Item.TitleFormatted.ToString())
-                            {
-                                case "Change Label":
-                                    Intent i = new Intent(this, typeof(ChangeLabelDialog));
-                                    i.PutExtra("PhotoId", img.Id);
-                                    StartActivityForResult(i, 2);
-                                    break;
-                                case "Delete":
-                                    pm.DeletePhoto(img.Id);
-                                    RefreshLayout(ref LLRootLayout, pm);
-                                    break;
-                            }
-                        };
-                        menu.Show();
+                        var data = ClipData.NewPlainText("label", img.Id.ToString());
+                        img.StartDrag(data, new View.DragShadowBuilder(img), img, 0);
                     };
                     flForImg.AddView(img, lpForImg);
                     LPhotosTable.AddView(flForImg);
@@ -352,7 +346,7 @@ namespace PhotoAlbum
             base.OnActivityResult(requestCode, resultCode, data);
 
             // Make it available in the gallery
-            if(requestCode == 0)
+            if (requestCode == 0)
             {
                 Intent mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
                 Uri contentUri = Uri.FromFile(App._file);
@@ -379,17 +373,69 @@ namespace PhotoAlbum
                     GC.Collect();
                 }
             }
-            
-            else if(requestCode == 1)
+
+            else if (requestCode == 1)
             {
 
             }
 
-            else if(requestCode == 2)
+            else if (requestCode == 2)
             {
 
             }
             RefreshLayout(ref LLRootLayout, pm);
+        }
+
+
+        void HandleDrag(object sender, Android.Views.View.DragEventArgs e)
+        {
+            var evt = e.Event;
+            switch (evt.Action)
+            {
+                case DragAction.Started:
+                    /* To register your view as a potential drop zone for the current view being dragged
+                     * you need to set the event as handled
+                     */
+                    e.Handled = true;
+
+                    /* An important thing to know is that drop zones need to be visible (i.e. their Visibility)
+                     * property set to something other than Gone or Invisible) in order to be considered. A nice workaround
+                     * if you need them hidden initially is to have their layout_height set to 1.
+                     */
+
+                    break;
+                case DragAction.Entered:
+                case DragAction.Exited:
+                    /* These two states allows you to know when the dragged view is contained atop your drop zone.
+                     * Traditionally you will use that tip to display a focus ring or any other similar mechanism
+                     * to advertise your view as a drop zone to the user.
+                     */
+
+                    break;
+                case DragAction.Drop:
+                    /* This state is used when the user drops the view on your drop zone. If you want to accept the drop,
+                     *  set the Handled value to true like before.
+                     */
+                    View v = (View)e.Event.LocalState;
+                    float x = e.Event.GetX();
+                    float y = e.Event.GetY();
+
+                    View t = sender as TextView;
+                    pm.ChangePhotoLabel(v.Id, t.Id);
+                          
+                    /* It's also probably time to get a bit of the data associated with the drag to know what
+                     * you want to do with the information.
+                     */
+                    var data = e.Event.ClipData.GetItemAt(0).Text;
+                    RefreshLayout(ref LLRootLayout, pm);
+                    break;
+                case DragAction.Ended:
+                    /* This is the final state, where you still have possibility to cancel the drop happened.
+                     * You will generally want to set Handled to true.
+                     */
+                    e.Handled = true;
+                    break;
+            }
         }
     }
 }

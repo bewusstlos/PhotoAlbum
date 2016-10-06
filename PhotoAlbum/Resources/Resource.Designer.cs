@@ -47,7 +47,10 @@ namespace PhotoAlbum
 		{
 			
 			// aapt resource value: 0x7f050000
-			public const int theme_material_pink_background = 2131034112;
+			public const int theme_custom_background = 2131034112;
+			
+			// aapt resource value: 0x7f050001
+			public const int theme_material_pink_background = 2131034113;
 			
 			static Color()
 			{

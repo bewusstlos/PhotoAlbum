@@ -64,6 +64,9 @@
     <Compile Include="FullscreenPhotoView.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="AddChangeLabel.cs" />
+    <Compile Include="Redis\Redis.cs" />
+    <Compile Include="Redis\RedisClient.cs" />
+    <Compile Include="Redis\RedisSub.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

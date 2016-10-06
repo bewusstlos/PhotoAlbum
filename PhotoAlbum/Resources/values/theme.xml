@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="theme_material_pink_background">#ffe0e0e0</color><style name="Theme.Material.Pink" parent="@android:style/Theme.Material.Light">
+  <color name="theme_custom_background">#ffe0e0e0</color><color name="theme_material_pink_background">#ffe0e0e0</color><style name="Theme.Material.Pink" parent="@android:style/Theme.Material.Light">
     <item name="android:colorPrimary">#ff607d8b</item>
     <item name="android:colorPrimaryDark">#ff455a64</item>
     <item name="android:colorAccent">#ff283593</item>
@@ -8,4 +8,4 @@
     <item name="android:colorControlActivated">#ff546e7a</item>
     <item name="android:colorButtonNormal">#ff263238</item>
   <item name="android:colorBackground">@color/theme_material_pink_background</item><item name="android:windowBackground">?android:attr/colorBackground</item><item name="android:textColorPrimary">#fffafafa</item><item name="android:textColorSecondary">#ff9e9e9e</item></style>
-<style name="Theme.Custom" parent="@android:style/Theme.Material.Light"><item name="android:colorPrimary">#fffafafa</item></style></resources>
+<style name="Theme.Custom" parent="@android:style/Theme.Material.Light"><item name="android:colorPrimary">#fff5f5f5</item><item name="android:colorBackground">@color/theme_custom_background</item><item name="android:windowBackground">?android:attr/colorBackground</item></style></resources>
