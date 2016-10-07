@@ -6,4 +6,8 @@
         android:background="#ff455a64"
         android:textColor="#000000"
         android:title="Add Label" />
+  <item
+        android:id="@+id/change_row_count"
+        android:showAsAction="ifRoom"
+        android:title="Change Row Count"/>
 </menu>

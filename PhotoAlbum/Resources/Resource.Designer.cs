@@ -75,16 +75,19 @@ namespace PhotoAlbum
 			public const int ic_camera_enhance_white_48dp = 2130837506;
 			
 			// aapt resource value: 0x7f020003
-			public const int ic_remove_black_18dp = 2130837507;
+			public const int ic_delete_forever_black_48dp = 2130837507;
 			
 			// aapt resource value: 0x7f020004
-			public const int ic_view_headline_black_48dp = 2130837508;
+			public const int ic_remove_black_18dp = 2130837508;
 			
 			// aapt resource value: 0x7f020005
-			public const int ic_view_headline_white_48dp = 2130837509;
+			public const int ic_view_headline_black_48dp = 2130837509;
 			
 			// aapt resource value: 0x7f020006
-			public const int Icon = 2130837510;
+			public const int ic_view_headline_white_48dp = 2130837510;
+			
+			// aapt resource value: 0x7f020007
+			public const int Icon = 2130837511;
 			
 			static Drawable()
 			{
@@ -99,47 +102,50 @@ namespace PhotoAlbum
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f07000b
-			public const int RootLayout = 2131165195;
+			// aapt resource value: 0x7f07000c
+			public const int RootLayout = 2131165196;
 			
 			// aapt resource value: 0x7f070006
 			public const int add_label = 2131165190;
 			
-			// aapt resource value: 0x7f07000c
-			public const int change_label = 2131165196;
-			
-			// aapt resource value: 0x7f070000
-			public const int change_layout_style = 2131165184;
-			
-			// aapt resource value: 0x7f070002
-			public const int context_menu = 2131165186;
-			
-			// aapt resource value: 0x7f07000a
-			public const int context_menu_popuper = 2131165194;
-			
-			// aapt resource value: 0x7f070009
-			public const int delete = 2131165193;
-			
-			// aapt resource value: 0x7f070008
-			public const int delete_label = 2131165192;
-			
-			// aapt resource value: 0x7f070003
-			public const int edit_label = 2131165187;
-			
-			// aapt resource value: 0x7f070005
-			public const int label_cancel = 2131165189;
-			
-			// aapt resource value: 0x7f070004
-			public const int label_ok = 2131165188;
+			// aapt resource value: 0x7f07000d
+			public const int change_label = 2131165197;
 			
 			// aapt resource value: 0x7f070007
-			public const int photo = 2131165191;
-			
-			// aapt resource value: 0x7f07000d
-			public const int spinner = 2131165197;
+			public const int change_row_count = 2131165191;
 			
 			// aapt resource value: 0x7f070001
-			public const int take_picture = 2131165185;
+			public const int context_menu = 2131165185;
+			
+			// aapt resource value: 0x7f07000b
+			public const int context_menu_popuper = 2131165195;
+			
+			// aapt resource value: 0x7f07000a
+			public const int delete = 2131165194;
+			
+			// aapt resource value: 0x7f070009
+			public const int delete_label = 2131165193;
+			
+			// aapt resource value: 0x7f070002
+			public const int edit_label = 2131165186;
+			
+			// aapt resource value: 0x7f070004
+			public const int label_cancel = 2131165188;
+			
+			// aapt resource value: 0x7f070003
+			public const int label_ok = 2131165187;
+			
+			// aapt resource value: 0x7f070008
+			public const int photo = 2131165192;
+			
+			// aapt resource value: 0x7f070005
+			public const int seek_bar = 2131165189;
+			
+			// aapt resource value: 0x7f07000e
+			public const int spinner = 2131165198;
+			
+			// aapt resource value: 0x7f070000
+			public const int take_picture = 2131165184;
 			
 			static Id()
 			{
@@ -161,22 +167,25 @@ namespace PhotoAlbum
 			public const int add_change_label = 2130903041;
 			
 			// aapt resource value: 0x7f030002
-			public const int context_menu = 2130903042;
+			public const int change_row_count = 2130903042;
 			
 			// aapt resource value: 0x7f030003
-			public const int fullscreen_photo_view = 2130903043;
+			public const int context_menu = 2130903043;
 			
 			// aapt resource value: 0x7f030004
-			public const int label_context_menu = 2130903044;
+			public const int fullscreen_photo_view = 2130903044;
 			
 			// aapt resource value: 0x7f030005
-			public const int Main = 2130903045;
+			public const int label_context_menu = 2130903045;
 			
 			// aapt resource value: 0x7f030006
-			public const int photo_context_menu = 2130903046;
+			public const int Main = 2130903046;
 			
 			// aapt resource value: 0x7f030007
-			public const int select_label = 2130903047;
+			public const int photo_context_menu = 2130903047;
+			
+			// aapt resource value: 0x7f030008
+			public const int select_label = 2130903048;
 			
 			static Layout()
 			{
