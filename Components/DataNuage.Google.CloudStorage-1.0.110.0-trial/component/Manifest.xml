@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<component format="1" id="DataNuage.Google.CloudStorage">
+  <name>Google Cloud Storage</name>
+  <publisher>DataNuage S.A.S.</publisher>
+  <publisher-url>http://www.datanuage.com</publisher-url>
+  <version>1.0.110.0</version>
+  <summary>Use Google Cloud Storage to store and retrieve any amount of data at any time, from anywhere.</summary>
+  <samples>
+    <sample id="CloudStorage.Sample.iOS">
+      <name>iOS Sample.</name>
+      <summary>Demonstrates Google CloudStorage on iOS.</summary>
+    </sample>
+    <sample id="CloudStorage.Sample.Android">
+      <name>Android Sample.</name>
+      <summary>Demonstrates Google Cloud Storage on Android</summary>
+    </sample>
+    <sample id="CloudStorage.Sample.WP8">
+      <name>Windows Phone Sample.</name>
+      <summary>Demonstrates Google CloudStorage on Windows Phone</summary>
+    </sample>
+  </samples>
+</component>

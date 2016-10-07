@@ -14,7 +14,6 @@ using PhotoManager;
 using Environment = Android.OS.Environment;
 using Uri = Android.Net.Uri;
 using Android.Views;
-using RedisSharp;
 
 namespace PhotoAlbum
 {
@@ -25,7 +24,7 @@ namespace PhotoAlbum
         public static Bitmap bitmap;
     }
 
-    [Activity(Label = "PhotoAlbum", MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(Label = "Photo Album", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
         PhotosManager pm;
@@ -34,12 +33,14 @@ namespace PhotoAlbum
         int sw;
         int photoRowCount = 2;
 
+        //Init buttons on Action Bar
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
             MenuInflater.Inflate(Resource.Layout.ActionBarMenu, menu);
             return base.OnCreateOptionsMenu(menu);
         }
 
+        //Events for Action Bar buttons
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
             switch (item.TitleFormatted.ToString())
@@ -77,21 +78,26 @@ namespace PhotoAlbum
 
         protected override void OnCreate(Bundle bundle)
         {
+            //Metrics, needed to show layout correctly
             sw = (int)((float)Resources.DisplayMetrics.WidthPixels -50);
 
             base.OnCreate(bundle);
+
+            //SQlite init constants
             SQLite.Net.Interop.ISQLitePlatform s = new SQLite.Net.Platform.XamarinAndroid.SQLitePlatformAndroid();
             string path = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "photos.db");
 
             if (System.IO.File.Exists(path))
             {
-                pm = new PhotosManager(s, path);
+                pm = new PhotosManager(s, path,this);
             }
             else
             {
-                pm = new PhotosManager(s, path, true);
+                pm = new PhotosManager(s, path,this, true);
             }
+
             SetContentView(Resource.Layout.Main);
+
             CreateDirectoryForPictures();
             LLRootLayout = FindViewById<LinearLayout>(Resource.Id.RootLayout);
             LLContextMenuOwner = FindViewById<LinearLayout>(Resource.Id.context_menu_popuper);
@@ -105,6 +111,7 @@ namespace PhotoAlbum
             SetLayoutSpoilerStyle(ref RootLayout, pm,photoRow);
         }
 
+        //All views creating here
         public void SetLayoutSpoilerStyle(ref LinearLayout RootLayout, PhotosManager pm, int photoRowCount)
         {
             List<Label> AllLabels = pm.GetLabelsToList();
@@ -114,22 +121,22 @@ namespace PhotoAlbum
             {
                 PhotosForEachLabels = pm.GetPhotosOfLabelToList(l);
 
+                //Container for each Category
                 LinearLayout LEachLabel = new LinearLayout(this);
                 LinearLayout.LayoutParams lpForLEachLabel = new LinearLayout.LayoutParams(-1, -2);
                 LEachLabel.Orientation = Orientation.Vertical;
                 LEachLabel.Elevation = 10;
                 lpForLEachLabel.SetMargins(20, 10, 20, 10);
 
+                //Container for Label Text
                 LinearLayout LEachLabelHeader = new LinearLayout(this);
                 LinearLayout.LayoutParams lpForLEachLabelHeader = new LinearLayout.LayoutParams(-1, -2);
                 LEachLabelHeader.SetBackgroundColor(Color.ParseColor("#fff5f5f5"));
                 LEachLabelHeader.Orientation = Orientation.Horizontal;
 
-               
+                
 
-
-                LEachLabelHeader.Elevation = 20;
-
+                //Text for Label
                 TextView TVLabelHeader = new TextView(this);
                 TVLabelHeader.TextSize = 18;
                 TVLabelHeader.SetTextColor(Color.Black);
@@ -150,23 +157,24 @@ namespace PhotoAlbum
                 ImageView Delete = new ImageView(this);
                 Delete.Drag += HandleDrag;
                 Delete.SetImageResource(Resource.Drawable.ic_delete_forever_black_48dp);
-                Delete.Visibility = ViewStates.Gone;
                 RelativeLayout.LayoutParams lpForDelete = new RelativeLayout.LayoutParams((int)(sw/10.7), (int)(sw/10.7));
                 lpForDelete.AddRule(LayoutRules.AlignParentRight);
                 rlForDeleteButton.AddView(Delete, lpForDelete);
 
                 LEachLabelHeader.AddView(rlForDeleteButton);
-                //
-
+                
+                //TextView for changing label name
                 EditText ETLabelChange = new EditText(this);
                 LinearLayout.LayoutParams lpForETLabelChange = new LinearLayout.LayoutParams(-2, -2, 4f);
                 ETLabelChange.Visibility = ViewStates.Gone;
 
+                //Button to confgirm label name changes
                 Button BConfirmChange = new Button(this);
                 LinearLayout.LayoutParams lpForBConfirmChange = new LinearLayout.LayoutParams(-2, -2, 1f);
                 BConfirmChange.Text = "OK";
                 BConfirmChange.Visibility = ViewStates.Gone;
 
+                //GridLayout for showing all photos in table of each Label
                 GridLayout LPhotosTable = new GridLayout(this);
                 LPhotosTable.Orientation = GridOrientation.Horizontal;
                 LinearLayout.LayoutParams lpForLPhotosTable = new LinearLayout.LayoutParams(-1, -2);
@@ -189,7 +197,7 @@ namespace PhotoAlbum
                     {
 
                         HideShowAnimation(ref LPhotosTable, LPhotosTable.RowCount, sw, false);
-                        LPhotosTable.Visibility = Android.Views.ViewStates.Gone;
+                        LPhotosTable.Visibility = Android.Views.ViewStates.Invisible;
                     }
                     else
                     {
@@ -241,21 +249,22 @@ namespace PhotoAlbum
                         menu.Inflate(Resource.Layout.label_context_menu);
                         menu.MenuItemClick += (s, arg) =>
                         {
-                            switch (arg.Item.TitleFormatted.ToString())
+                            if (TVLabelHeader.Text != "Unsigned")
                             {
-                                case "Rename Label":
-                                    if (TVLabelHeader.Text != "Unsigned")
-                                    {
+                                switch (arg.Item.TitleFormatted.ToString())
+                                {
+                                    case "Rename Label":
+
                                         TVLabelHeader.Visibility = ViewStates.Gone;
                                         ETLabelChange.Visibility = ViewStates.Visible;
                                         BConfirmChange.Visibility = ViewStates.Visible;
-                                    }
 
-                                    break;
-                                case "Delete":
-                                    pm.DeleteLabelWithout(LEachLabelHeader.Id);
-                                    RefreshLayout(ref LLRootLayout, pm,photoRowCount);
-                                    break;
+                                        break;
+                                    case "Delete":
+                                        pm.DeleteLabelWithout(l.Id);
+                                        RefreshLayout(ref LLRootLayout, pm, photoRowCount);
+                                        break;
+                                }
                             }
                         };
                         menu.Show();
@@ -264,11 +273,13 @@ namespace PhotoAlbum
 
                 BConfirmChange.Click += delegate
                 {
-                    pm.ChangeLabel(LEachLabelHeader.Id, ETLabelChange.Text);
+                    pm.ChangeLabel(l.Id, ETLabelChange.Text);
                     RefreshLayout(ref LLRootLayout, pm,photoRowCount);
                 };
                 LEachLabel.AddView(LPhotosTable, lpForLPhotosTable);
                 RootLayout.AddView(LEachLabel, lpForLEachLabel);
+
+                Delete.Visibility = ViewStates.Invisible;
             }
         }
 
@@ -306,7 +317,6 @@ namespace PhotoAlbum
         {
             base.OnActivityResult(requestCode, resultCode, data);
 
-            // Make it available in the gallery
             if (requestCode == 0)
             {
                 Intent mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
@@ -315,22 +325,12 @@ namespace PhotoAlbum
                 mediaScanIntent.SetData(contentUri);
                 SendBroadcast(mediaScanIntent);
 
-                // Display in ImageView. We will resize the bitmap to fit the display.
-                // Loading the full sized image will consume to much memory
-                // and cause the application to crash.
-
-
-
-
                 int width = Resources.DisplayMetrics.WidthPixels / 2 - 30;
                 int height = width;
                 App.bitmap = App._file.Path.LoadAndResizeBitmap(width, height);
                 if (App.bitmap != null)
                 {
-                    //_imageView.SetImageBitmap(App.bitmap);
                     App.bitmap = null;
-
-                    // Dispose of the Java side bitmap.
                     GC.Collect();
                 }
             }
@@ -344,6 +344,7 @@ namespace PhotoAlbum
             {
 
             }
+
             else if(requestCode == 3)
             {
                 photoRowCount = data.GetIntExtra("RowCount", 0);
@@ -359,40 +360,36 @@ namespace PhotoAlbum
             switch (evt.Action)
             {
                 case DragAction.Started:
-                    /* To register your view as a potential drop zone for the current view being dragged
-                     * you need to set the event as handled
-                     */
                     e.Handled = true;
-
-                    /* An important thing to know is that drop zones need to be visible (i.e. their Visibility)
-                     * property set to something other than Gone or Invisible) in order to be considered. A nice workaround
-                     * if you need them hidden initially is to have their layout_height set to 1.
-                     */
-
                     break;
+                    //Setting color of drop zones on enter
                 case DragAction.Entered:
                     if (sender.GetType() == typeof(ImageView))
                     {
                         t = sender as ImageView;
                         t.SetBackgroundColor(Color.Red);
                     }
+                    else if (sender.GetType() == typeof(TextView))
+                    {
+                        t = sender as TextView;
+                        t.SetBackgroundColor(Color.Blue);
+                    }
                     break;
+                    //Setting color back to default
                 case DragAction.Exited:
                     if (sender.GetType() == typeof(ImageView))
                     {
                         t = sender as ImageView;
                         t.SetBackgroundColor(Color.Transparent);
                     }
-                    /* These two states allows you to know when the dragged view is contained atop your drop zone.
-                     * Traditionally you will use that tip to display a focus ring or any other similar mechanism
-                     * to advertise your view as a drop zone to the user.
-                     */
-
+                    else if (sender.GetType() == typeof(TextView))
+                    {
+                        t = sender as TextView;
+                        t.SetBackgroundColor(Color.Transparent);
+                    }
                     break;
+                    //Actions on drop
                 case DragAction.Drop:
-                    /* This state is used when the user drops the view on your drop zone. If you want to accept the drop,
-                     *  set the Handled value to true like before.
-                     */
                     View v = (View)e.Event.LocalState;
                     float x = e.Event.GetX();
                     float y = e.Event.GetY();
@@ -405,20 +402,12 @@ namespace PhotoAlbum
                     {
                         t = sender as ImageView;
                         pm.DeletePhoto(v.Id);
-                        t.Visibility = ViewStates.Gone;
                     }
-                    /* It's also probably time to get a bit of the data associated with the drag to know what
-                     * you want to do with the information.
-                     */
                     var data = e.Event.ClipData.GetItemAt(0).Text;
                     RefreshLayout(ref LLRootLayout, pm, photoRowCount);
-
                     break;
                 case DragAction.Ended:
-                    /* This is the final state, where you still have possibility to cancel the drop happened.
-                     * You will generally want to set Handled to true.
-                     */
-                    
+                    t.Visibility = ViewStates.Invisible;
                     e.Handled = true;
                     break;
             }

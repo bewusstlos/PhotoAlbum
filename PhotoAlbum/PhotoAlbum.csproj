@@ -107,6 +107,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cloud\Cloud.csproj">
+      <Project>{2e7bf08e-b527-40d5-9b15-64db7623078e}</Project>
+      <Name>Cloud</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PhotoManager\PhotoManager.csproj">
       <Project>{01605b90-dee3-451a-a1cb-60e2a92804b0}</Project>
       <Name>PhotoManager</Name>

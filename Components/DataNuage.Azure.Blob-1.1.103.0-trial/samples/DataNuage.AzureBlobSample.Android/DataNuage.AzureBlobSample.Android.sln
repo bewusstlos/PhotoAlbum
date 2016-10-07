@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataNuage.AzureBlobSample.Android", "DataNuage.AzureBlobSample.Android\DataNuage.AzureBlobSample.Android.csproj", "{61482C4F-D49B-4F9A-A342-247F1889F627}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		TRIAL|Any CPU = TRIAL|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{61482C4F-D49B-4F9A-A342-247F1889F627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61482C4F-D49B-4F9A-A342-247F1889F627}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61482C4F-D49B-4F9A-A342-247F1889F627}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{61482C4F-D49B-4F9A-A342-247F1889F627}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61482C4F-D49B-4F9A-A342-247F1889F627}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61482C4F-D49B-4F9A-A342-247F1889F627}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{61482C4F-D49B-4F9A-A342-247F1889F627}.TRIAL|Any CPU.ActiveCfg = TRIAL|Any CPU
+		{61482C4F-D49B-4F9A-A342-247F1889F627}.TRIAL|Any CPU.Build.0 = TRIAL|Any CPU
+		{61482C4F-D49B-4F9A-A342-247F1889F627}.TRIAL|Any CPU.Deploy.0 = TRIAL|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

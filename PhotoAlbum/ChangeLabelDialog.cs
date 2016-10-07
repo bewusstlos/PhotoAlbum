@@ -25,15 +25,15 @@ namespace PhotoAlbum
             SQLite.Net.Interop.ISQLitePlatform s = new SQLite.Net.Platform.XamarinAndroid.SQLitePlatformAndroid();
             string path = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "photos.db");
 
-            PhotosManager pm = new PhotosManager(s, path);
+            PhotosManager pm = new PhotosManager(s, path,this);
 
             if (System.IO.File.Exists(path))
             {
-                pm = new PhotosManager(s, path);
+                pm = new PhotosManager(s, path,this);
             }
             else
             {
-                pm = new PhotosManager(s, path, true);
+                pm = new PhotosManager(s, path,this, true);
             }
 
             int photoId = Intent.GetIntExtra("PhotoId", 0);

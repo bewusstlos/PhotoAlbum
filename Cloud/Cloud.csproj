@@ -35,29 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DeviceInfo.Plugin">
-      <HintPath>..\Components\oraclemcs-1.0\lib\android\DeviceInfo.Plugin.dll</HintPath>
-    </Reference>
-    <Reference Include="DeviceInfo.Plugin.Abstractions">
-      <HintPath>..\Components\oraclemcs-1.0\lib\android\DeviceInfo.Plugin.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Geolocator.Plugin">
-      <HintPath>..\Components\oraclemcs-1.0\lib\android\Geolocator.Plugin.dll</HintPath>
-    </Reference>
-    <Reference Include="Geolocator.Plugin.Abstractions">
-      <HintPath>..\Components\oraclemcs-1.0\lib\android\Geolocator.Plugin.Abstractions.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Components\oraclemcs-1.0\lib\android\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Oracle.Cloud.Mobile">
-      <HintPath>..\Components\oraclemcs-1.0\lib\android\Oracle.Cloud.Mobile.dll</HintPath>
-    </Reference>
-    <Reference Include="Oracle.Cloud.Mobile.Android">
-      <HintPath>..\Components\oraclemcs-1.0\lib\android\Oracle.Cloud.Mobile.Android.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -65,20 +44,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CloudManage.cs" />
+    <Compile Include="Redis.cs" />
+    <Compile Include="RedisClient.cs" />
+    <Compile Include="RedisSub.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="RedisSharpShared.projitems" />
+    <None Include="RedisSharpShared.shproj" />
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\Values\Strings.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <XamarinComponentReference Include="oraclemcs">
-      <Visible>False</Visible>
-      <Version>1.0</Version>
-    </XamarinComponentReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PhotoManager\PhotoManager.csproj">

@@ -26,6 +26,8 @@ namespace PhotoAlbum
 		
 		public static void UpdateIdValues()
 		{
+			global::Cloud.Resource.String.ApplicationName = global::PhotoAlbum.Resource.String.ApplicationName;
+			global::Cloud.Resource.String.Hello = global::PhotoAlbum.Resource.String.Hello;
 			global::SQLite.Net.Platform.XamarinAndroid.Resource.String.ApplicationName = global::PhotoAlbum.Resource.String.ApplicationName;
 			global::SQLite.Net.Platform.XamarinAndroid.Resource.String.Hello = global::PhotoAlbum.Resource.String.Hello;
 		}

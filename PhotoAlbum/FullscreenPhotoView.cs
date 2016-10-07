@@ -28,11 +28,11 @@ namespace PhotoAlbum
 
             if (System.IO.File.Exists(path))
             {
-                pm = new PhotosManager(s, path);
+                pm = new PhotosManager(s, path,this);
             }
             else
             {
-                pm = new PhotosManager(s, path, true);
+                pm = new PhotosManager(s, path, this,true);
             }
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.fullscreen_photo_view);
