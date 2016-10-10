@@ -78,9 +78,9 @@ namespace PhotoAlbum
 
         protected override void OnCreate(Bundle bundle)
         {
-            //Metrics, needed to show layout correctly
+            //Metrics, which need to show layout correctly
             sw = (int)((float)Resources.DisplayMetrics.WidthPixels -50);
-
+            new Cloud.CloudManage(this);
             base.OnCreate(bundle);
 
             //SQlite init constants
@@ -185,6 +185,7 @@ namespace PhotoAlbum
                 LPhotosTable.RowCount = PhotosForEachLabels.Count / 2 + 1;
                 LPhotosTable.SetBackgroundColor(Color.ParseColor("#fff5f5f5"));
 
+                //Event for showing/hiding category 
                 LEachLabelHeader.Click += delegate
                 {
                     int count = pm.GetPhotosOfLabelToList(l).Count;
@@ -206,7 +207,7 @@ namespace PhotoAlbum
                     }
                 };
 
-
+                //Layout each photo for current category
                 foreach (var image in PhotosForEachLabels)
                 {
                     int margin = (sw / photoRowCount) / 30;
@@ -215,7 +216,7 @@ namespace PhotoAlbum
                     img.SetImageBitmap(BitmapHelpers.LoadAndResizeBitmap(image.Path, sw / photoRowCount - (margin * 2), sw / photoRowCount - (margin * 2)));
                     LinearLayout.LayoutParams lpForImg = new LinearLayout.LayoutParams(sw / photoRowCount - (margin*2), sw / photoRowCount - (margin * 2));
                     img.SetScaleType(ImageView.ScaleType.CenterCrop);
-                    //img.Elevation = 5;
+                    img.Elevation = 5;
                     flForImg.SetPadding(margin, margin, margin, margin);
                     img.Id = image.Id;
 
@@ -241,6 +242,8 @@ namespace PhotoAlbum
                 LEachLabelHeader.AddView(BConfirmChange, lpForBConfirmChange);
 
                 LEachLabel.AddView(LEachLabelHeader, lpForLEachLabelHeader);
+
+                //Event for popup menu for label
                 LEachLabelHeader.LongClick += delegate
                 {
                     if (LEachLabelHeader.Id != 0)
@@ -271,6 +274,7 @@ namespace PhotoAlbum
                     }
                 };
 
+                //Event for renaming label
                 BConfirmChange.Click += delegate
                 {
                     pm.ChangeLabel(l.Id, ETLabelChange.Text);
@@ -313,6 +317,7 @@ namespace PhotoAlbum
             return availableActivities != null && availableActivities.Count > 0;
         }
 
+        //Method, which take care about closing different activities
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
@@ -352,7 +357,7 @@ namespace PhotoAlbum
             RefreshLayout(ref LLRootLayout, pm,photoRowCount);
         }
 
-
+        //Event, which control drag`n`drop
         void HandleDrag(object sender, Android.Views.View.DragEventArgs e)
         {
             var evt = e.Event;
