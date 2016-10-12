@@ -9,7 +9,7 @@ namespace RedisServer
 {
     public class RedisManager
     {
-        public static Redis redis = new Redis("192.168.228.2", 6379);        
+        public static Redis redis = new Redis("192.168.0.118", 6379);        
         public List<Photo>  p;
         public List<Label> l;
         
@@ -123,6 +123,7 @@ namespace RedisServer
         public void SerializePhotos()
         {
             string jsonPhotos = JsonConvert.SerializeObject(p);
+            redis.Remove("photos");
             redis.Set("photos", jsonPhotos);
 
         }
@@ -130,6 +131,7 @@ namespace RedisServer
         public void SerializeLabels()
         {
             string jsonLabels = JsonConvert.SerializeObject(l);
+            redis.Remove("photos");
             redis.Set("labels", jsonLabels);
         }
 

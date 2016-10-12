@@ -187,12 +187,14 @@ namespace PhotoAlbum
                 //TextView for changing label name
                 EditText ETLabelChange = new EditText(this);
                 LinearLayout.LayoutParams lpForETLabelChange = new LinearLayout.LayoutParams(-2, -2, 4f);
+                LEachLabelHeader.AddView(ETLabelChange, lpForETLabelChange);
                 ETLabelChange.Visibility = ViewStates.Gone;
 
                 //Button to confgirm label name changes
                 Button BConfirmChange = new Button(this);
                 LinearLayout.LayoutParams lpForBConfirmChange = new LinearLayout.LayoutParams(-2, -2, 1f);
                 BConfirmChange.Text = "OK";
+                LEachLabelHeader.AddView(BConfirmChange, lpForBConfirmChange);
                 BConfirmChange.Visibility = ViewStates.Gone;
 
                 //GridLayout for showing all photos in table of each Label
@@ -260,9 +262,6 @@ namespace PhotoAlbum
                     LPhotosTable.AddView(flForImg);
                 }
 
-                LEachLabelHeader.AddView(ETLabelChange, lpForETLabelChange);
-                LEachLabelHeader.AddView(BConfirmChange, lpForBConfirmChange);
-
                 LEachLabel.AddView(LEachLabelHeader, lpForLEachLabelHeader);
 
                 //Event for popup menu for label
@@ -274,8 +273,6 @@ namespace PhotoAlbum
                         menu.Inflate(Resource.Layout.label_context_menu);
                         menu.MenuItemClick += (s, arg) =>
                         {
-                            if (TVLabelHeader.Text != "Unsigned")
-                            {
                                 switch (arg.Item.TitleFormatted.ToString())
                                 {
                                     case "Rename Label":
@@ -289,7 +286,6 @@ namespace PhotoAlbum
                                         rm.SerializeLabels();
                                         RefreshLayout(ref LLRootLayout,rm, photoRowCount);
                                         break;
-                                }
                             }
                         };
                         menu.Show();
@@ -369,6 +365,7 @@ namespace PhotoAlbum
                 {
 
                 }
+                App._file.Delete();
             }
 
             else if (requestCode == 1)
