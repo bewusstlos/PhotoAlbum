@@ -5,9 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoAlbum", "PhotoAlbum\PhotoAlbum.csproj", "{4811405C-A905-4C35-B530-1FFF088B9634}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoManager", "PhotoManager\PhotoManager.csproj", "{01605B90-DEE3-451A-A1CB-60E2A92804B0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloud", "Cloud\Cloud.csproj", "{F9276B7D-3654-4FA1-85CE-B0E575B0B14F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedisServer", "RedisServer\RedisServer.csproj", "{5AF7A816-1FB8-43E6-A2B9-DDA94F0542C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,14 +19,10 @@ Global
 		{4811405C-A905-4C35-B530-1FFF088B9634}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4811405C-A905-4C35-B530-1FFF088B9634}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4811405C-A905-4C35-B530-1FFF088B9634}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{01605B90-DEE3-451A-A1CB-60E2A92804B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{01605B90-DEE3-451A-A1CB-60E2A92804B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{01605B90-DEE3-451A-A1CB-60E2A92804B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{01605B90-DEE3-451A-A1CB-60E2A92804B0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F9276B7D-3654-4FA1-85CE-B0E575B0B14F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F9276B7D-3654-4FA1-85CE-B0E575B0B14F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F9276B7D-3654-4FA1-85CE-B0E575B0B14F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F9276B7D-3654-4FA1-85CE-B0E575B0B14F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AF7A816-1FB8-43E6-A2B9-DDA94F0542C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AF7A816-1FB8-43E6-A2B9-DDA94F0542C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AF7A816-1FB8-43E6-A2B9-DDA94F0542C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AF7A816-1FB8-43E6-A2B9-DDA94F0542C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

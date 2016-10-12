@@ -10,8 +10,6 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 
-using PhotoManager;
-
 namespace PhotoAlbum
 {
     [Activity(Label = "Select Label:", MainLauncher = false, Icon = "@drawable/icon", Theme = "@android:style/Theme.Material.Light.Dialog")]
@@ -25,24 +23,17 @@ namespace PhotoAlbum
             SQLite.Net.Interop.ISQLitePlatform s = new SQLite.Net.Platform.XamarinAndroid.SQLitePlatformAndroid();
             string path = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "photos.db");
 
-            PhotosManager pm = new PhotosManager(s, path,this);
+            RedisServer.RedisManager rm = new RedisServer.RedisManager();
 
-            if (System.IO.File.Exists(path))
-            {
-                pm = new PhotosManager(s, path,this);
-            }
-            else
-            {
-                pm = new PhotosManager(s, path,this, true);
-            }
+            
 
             int photoId = Intent.GetIntExtra("PhotoId", 0);
 
             SetContentView(Resource.Layout.select_label);
             selector = FindViewById<LinearLayout>(Resource.Id.spinner);
 
-            List<Label> labels =  pm.GetLabelsToList();
-            foreach(Label label in labels)
+            List<RedisServer.RedisManager.Label> labels =  rm.GetLabelsToList();
+            foreach(RedisServer.RedisManager.Label label in labels)
             {
                 TextView TVLabel = new TextView(this);
                 LinearLayout.LayoutParams lpForTVLabel = new LinearLayout.LayoutParams(-2, -2);
@@ -53,8 +44,10 @@ namespace PhotoAlbum
                 TVLabel.TextSize = 24;
                 TVLabel.Click += delegate
                     {
-                        pm.ChangePhotoLabel(photoId, label.Id);
-                        this.Finish();
+                       rm.ChangePhotoLabel(photoId, label.Id);
+                        rm.SerializeLabels();
+                        rm.SerializePhotos();
+                       this.Finish();
                     };
                 selector.AddView(TVLabel, lpForTVLabel);
             }

@@ -10,16 +10,23 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Graphics;
+using System.IO;
 
 namespace PhotoAlbum
 {
     public static class BitmapHelpers
     {
-        public static Bitmap LoadAndResizeBitmap(this string fileName, int width, int height)
+        public static byte [] ImageToByteArray(Bitmap b)
+        {
+            MemoryStream stream = new MemoryStream();
+            b.Compress(Bitmap.CompressFormat.Jpeg, 50, stream);
+            return stream.ToArray();
+        }
+
+        public static Bitmap LoadAndResizeBitmap(this byte[] byteArray, int width, int height)
         {
             // First we get the the dimensions of the file on disk
             BitmapFactory.Options options = new BitmapFactory.Options { InJustDecodeBounds = true, OutHeight = height, OutWidth=width };
-            BitmapFactory.DecodeFile(fileName, options);
 
             // Next we calculate the ratio that we need to resize the image by
             // in order to fit the requested dimensions.
@@ -37,7 +44,7 @@ namespace PhotoAlbum
             // Now we will load the image and have BitmapFactory resize it for us.
             options.InSampleSize = inSampleSize;
             options.InJustDecodeBounds = false;
-            Bitmap resizedBitmap = BitmapFactory.DecodeFile(fileName, options);
+            Bitmap resizedBitmap = BitmapFactory.DecodeByteArray(byteArray, 0, byteArray.Length, options);
 
             return resizedBitmap;
         }

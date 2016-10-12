@@ -107,16 +107,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cloud\Cloud.csproj">
-      <Project>{2e7bf08e-b527-40d5-9b15-64db7623078e}</Project>
-      <Name>Cloud</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PhotoManager\PhotoManager.csproj">
-      <Project>{01605b90-dee3-451a-a1cb-60e2a92804b0}</Project>
-      <Name>PhotoManager</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\values\theme.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -183,6 +173,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\ic_delete_forever_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RedisServer\RedisServer.csproj">
+      <Project>{5af7a816-1fb8-43e6-a2b9-dda94f0542c5}</Project>
+      <Name>RedisServer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

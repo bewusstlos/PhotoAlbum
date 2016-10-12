@@ -9,7 +9,6 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using PhotoManager;
 
 namespace PhotoAlbum
 {
@@ -24,23 +23,17 @@ namespace PhotoAlbum
             SQLite.Net.Interop.ISQLitePlatform s = new SQLite.Net.Platform.XamarinAndroid.SQLitePlatformAndroid();
             string path = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "photos.db");
 
-            PhotosManager pm = new PhotosManager(s, path,this);
+            RedisServer.RedisManager rm = new RedisServer.RedisManager();
 
-            if (System.IO.File.Exists(path))
-            {
-                pm = new PhotosManager(s, path,this);
-            }
-            else
-            {
-                pm = new PhotosManager(s, path,this, true);
-            }
+           
 
             SetContentView(Resource.Layout.add_change_label);
             ETLabelName = FindViewById<EditText>(Resource.Id.edit_label);
             BOK = FindViewById<Button>(Resource.Id.label_ok);
             BOK.Click += delegate
             {
-                pm.AddLabel(ETLabelName.Text);
+                rm.AddLabel(ETLabelName.Text);
+                rm.SerializeLabels();
                 this.Finish();
             };
         }

@@ -7,13 +7,15 @@ using Android.Graphics;
 using Android.OS;
 using Android.Provider;
 using Android.Widget;
+using Android.Net.Wifi;
 using Java.IO;
 using Android.Views.Animations;
 
-using PhotoManager;
 using Environment = Android.OS.Environment;
 using Uri = Android.Net.Uri;
 using Android.Views;
+
+using RedisServer;
 
 namespace PhotoAlbum
 {
@@ -27,10 +29,10 @@ namespace PhotoAlbum
     [Activity(Label = "Photo Album", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
-        PhotosManager pm;
         LinearLayout LLRootLayout;
         LinearLayout LLContextMenuOwner;
         int sw;
+        public RedisManager rm;
         int photoRowCount = 2;
 
         //Init buttons on Action Bar
@@ -78,48 +80,67 @@ namespace PhotoAlbum
 
         protected override void OnCreate(Bundle bundle)
         {
+            rm = new RedisManager();
             //Metrics, which need to show layout correctly
-            sw = (int)((float)Resources.DisplayMetrics.WidthPixels -50);
-            new Cloud.CloudManage(this);
+            sw = (int)((float)Resources.DisplayMetrics.WidthPixels - 50);
             base.OnCreate(bundle);
-
-            //SQlite init constants
-            SQLite.Net.Interop.ISQLitePlatform s = new SQLite.Net.Platform.XamarinAndroid.SQLitePlatformAndroid();
-            string path = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "photos.db");
-
-            if (System.IO.File.Exists(path))
-            {
-                pm = new PhotosManager(s, path,this);
-            }
-            else
-            {
-                pm = new PhotosManager(s, path,this, true);
-            }
-
+            //Init for Redis
             SetContentView(Resource.Layout.Main);
+
+            Deserialize();
 
             CreateDirectoryForPictures();
             LLRootLayout = FindViewById<LinearLayout>(Resource.Id.RootLayout);
             LLContextMenuOwner = FindViewById<LinearLayout>(Resource.Id.context_menu_popuper);
-            RefreshLayout(ref LLRootLayout, pm,photoRowCount);
+            RefreshLayout(ref LLRootLayout, rm, photoRowCount);
 
         }
 
-        public void RefreshLayout(ref LinearLayout RootLayout, PhotosManager pm, int photoRow)
+        public void Deserialize()
+        {
+            try
+            {
+                rm.DeserializePhotos();
+                rm.DeserializeLabels();
+            }
+            catch (System.OverflowException e)
+            {
+
+            }
+        }
+
+        public void Serialize()
+        {
+            try
+            {
+                rm.SerializeLabels();
+                rm.SerializePhotos();
+            }
+            catch(OverflowException e)
+            {
+
+            }
+        }
+
+        public void RefreshLayout(ref LinearLayout RootLayout,RedisManager rm, int photoRow)
         {
             RootLayout.RemoveAllViews();
-            SetLayoutSpoilerStyle(ref RootLayout, pm,photoRow);
+            SetLayoutSpoilerStyle(ref RootLayout,rm, photoRow);
         }
 
         //All views creating here
-        public void SetLayoutSpoilerStyle(ref LinearLayout RootLayout, PhotosManager pm, int photoRowCount)
+        public void SetLayoutSpoilerStyle(ref LinearLayout RootLayout, RedisManager rm, int photoRowCount)
         {
-            List<Label> AllLabels = pm.GetLabelsToList();
-            List<Photo> PhotosForEachLabels;
+            Deserialize();
 
-            foreach (Label l in AllLabels)
+            List<RedisManager.Label> AllLabels = rm.GetLabelsToList();
+            //Get All Labels from Redis
+            List <RedisManager.Photo > PhotosForEachLabels;
+
+            foreach (RedisManager.Label l in AllLabels)
             {
-                PhotosForEachLabels = pm.GetPhotosOfLabelToList(l);
+                PhotosForEachLabels = rm.GetPhotoForSomeLabel(l);
+                //Get All Photos for some Label
 
                 //Container for each Category
                 LinearLayout LEachLabel = new LinearLayout(this);
@@ -188,7 +209,8 @@ namespace PhotoAlbum
                 //Event for showing/hiding category 
                 LEachLabelHeader.Click += delegate
                 {
-                    int count = pm.GetPhotosOfLabelToList(l).Count;
+                    int count = PhotosForEachLabels.Count;
+                    //Photos of some Label
                     if(count <= 0)
                     {
                         Toast.MakeText(this, "No photo in this category...", ToastLength.Short).Show();
@@ -213,7 +235,7 @@ namespace PhotoAlbum
                     int margin = (sw / photoRowCount) / 30;
                     FrameLayout flForImg = new FrameLayout(this);
                     ImageView img = new ImageView(this);
-                    img.SetImageBitmap(BitmapHelpers.LoadAndResizeBitmap(image.Path, sw / photoRowCount - (margin * 2), sw / photoRowCount - (margin * 2)));
+                    img.SetImageBitmap(BitmapHelpers.LoadAndResizeBitmap(image.ByteArray, sw / photoRowCount - (margin * 2), sw / photoRowCount - (margin * 2)));
                     LinearLayout.LayoutParams lpForImg = new LinearLayout.LayoutParams(sw / photoRowCount - (margin*2), sw / photoRowCount - (margin * 2));
                     img.SetScaleType(ImageView.ScaleType.CenterCrop);
                     img.Elevation = 5;
@@ -257,15 +279,15 @@ namespace PhotoAlbum
                                 switch (arg.Item.TitleFormatted.ToString())
                                 {
                                     case "Rename Label":
-
                                         TVLabelHeader.Visibility = ViewStates.Gone;
                                         ETLabelChange.Visibility = ViewStates.Visible;
                                         BConfirmChange.Visibility = ViewStates.Visible;
 
                                         break;
                                     case "Delete":
-                                        pm.DeleteLabelWithout(l.Id);
-                                        RefreshLayout(ref LLRootLayout, pm, photoRowCount);
+                                        rm.DeleteLabel(l.Id);
+                                        rm.SerializeLabels();
+                                        RefreshLayout(ref LLRootLayout,rm, photoRowCount);
                                         break;
                                 }
                             }
@@ -277,8 +299,9 @@ namespace PhotoAlbum
                 //Event for renaming label
                 BConfirmChange.Click += delegate
                 {
-                    pm.ChangeLabel(l.Id, ETLabelChange.Text);
-                    RefreshLayout(ref LLRootLayout, pm,photoRowCount);
+                    rm.RenameLabel(l.Id, ETLabelChange.Text);
+                    rm.SerializeLabels();
+                    RefreshLayout(ref LLRootLayout, rm, photoRowCount);
                 };
                 LEachLabel.AddView(LPhotosTable, lpForLPhotosTable);
                 RootLayout.AddView(LEachLabel, lpForLEachLabel);
@@ -324,25 +347,33 @@ namespace PhotoAlbum
 
             if (requestCode == 0)
             {
-                Intent mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
-                Uri contentUri = Uri.FromFile(App._file);
-                pm.AddPhoto(App._file.Path);
-                mediaScanIntent.SetData(contentUri);
-                SendBroadcast(mediaScanIntent);
-
-                int width = Resources.DisplayMetrics.WidthPixels / 2 - 30;
-                int height = width;
-                App.bitmap = App._file.Path.LoadAndResizeBitmap(width, height);
-                if (App.bitmap != null)
+                try
                 {
-                    App.bitmap = null;
-                    GC.Collect();
+                    Intent mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
+                    Uri contentUri = Uri.FromFile(App._file);
+                    rm.AddPhoto(BitmapHelpers.ImageToByteArray(BitmapFactory.DecodeFile(App._file.ToString())));
+                    Serialize();
+                    mediaScanIntent.SetData(contentUri);
+                    SendBroadcast(mediaScanIntent);
+
+                    int width = Resources.DisplayMetrics.WidthPixels / 2 - 30;
+                    int height = width;
+                    //App.bitmap = App._file.Path.LoadAndResizeBitmap(width, height);
+                    if (App.bitmap != null)
+                    {
+                        App.bitmap = null;
+                        GC.Collect();
+                    }
+                }
+                catch
+                {
+
                 }
             }
 
             else if (requestCode == 1)
             {
-
+                Deserialize();
             }
 
             else if (requestCode == 2)
@@ -354,7 +385,8 @@ namespace PhotoAlbum
             {
                 photoRowCount = data.GetIntExtra("RowCount", 0);
             }
-            RefreshLayout(ref LLRootLayout, pm,photoRowCount);
+            
+            RefreshLayout(ref LLRootLayout, rm, photoRowCount);
         }
 
         //Event, which control drag`n`drop
@@ -401,15 +433,17 @@ namespace PhotoAlbum
                     if (sender.GetType() == typeof(TextView))
                     {
                         t = sender as TextView;
-                        pm.ChangePhotoLabel(v.Id, t.Id);
+                        rm.ChangePhotoLabel(v.Id, t.Id);
+                        Serialize();
                     }
                     else if (sender.GetType() == typeof(ImageView))
                     {
                         t = sender as ImageView;
-                        pm.DeletePhoto(v.Id);
+                        rm.DeletePhoto(v.Id);
+                        Serialize();
                     }
                     var data = e.Event.ClipData.GetItemAt(0).Text;
-                    RefreshLayout(ref LLRootLayout, pm, photoRowCount);
+                    RefreshLayout(ref LLRootLayout, rm, photoRowCount);
                     break;
                 case DragAction.Ended:
                     t.Visibility = ViewStates.Invisible;
@@ -419,4 +453,3 @@ namespace PhotoAlbum
         }
     }
 }
-
